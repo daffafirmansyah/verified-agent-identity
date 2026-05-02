@@ -1,0 +1,39 @@
+name: Verify Human Identity
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent_name:
+        description: 'Sanguan'
+        required: true
+        default: 'Sanguan'
+      agent_description:
+        description: 'Sanguan'
+        required: true
+        default: 'Sanguan AI Agent'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install
+
+      - name: Step 1 - Create new Ethereum Identity
+        run: node scripts/createNewEthereumIdentity.js
+
+      - name: Step 2 - Link Human to Agent
+        run: |
+          node scripts/manualLinkHumanToAgent.js \
+          --challenge "{\"name\": \"Sanguan\", \"description\": \"Sanguan AI Agent\"}"
